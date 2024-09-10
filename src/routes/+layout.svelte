@@ -2,7 +2,9 @@
   import { onMount } from "svelte";
   import { storage, Statistics, CrateDocManager } from "querylib";
   import "../app.css";
+  import { themeStore } from "../store/index";
 
+  let isDarkMode = false;
   let hiddenMenu = true;
   const menus = [
     {
@@ -22,6 +24,19 @@
       path: "/settings",
     },
   ];
+
+  function handleChangeThemeMode() {
+    isDarkMode = !isDarkMode;
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("QUERY_RS_THEME", "dark");
+      themeStore.update(() => "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("QUERY_RS_THEME", "light");
+      themeStore.update(() => "light");
+    }
+  }
 
   onMount(async () => {
     let firstVisit = await storage.getItem("first-visit");
@@ -48,25 +63,59 @@
       await storage.setItem("first-visit", "false");
     }
   });
+
+  onMount(() => {
+    if (
+      localStorage.QUERY_RS_THEME === "dark" ||
+      (!("QUERY_RS_THEME" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      console.log(window.matchMedia("(prefers-color-scheme: dark)"));
+      document.documentElement.classList.add("dark");
+      isDarkMode = true;
+      localStorage.setItem("QUERY_RS_THEME", "dark");
+      themeStore.update(() => "dark");
+    } else {
+      isDarkMode = false;
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("QUERY_RS_THEME", "light");
+      themeStore.update(() => "light");
+    }
+  });
 </script>
 
-<div class="flex-layout" style="flex-direction: column;">
+<div class="flex-layout dark:bg-darkBgPrimay" style="flex-direction: column;">
   <div class="max-w-[1160px] w-full flex flex-col">
     <ul
-      class="hidden list-none flex-row overflow-auto md:flex self-end py-5 text-base md:text-xl"
+      class="hidden list-none flex-row overflow-auto md:flex self-end py-5 text-base md:text-xl items-center"
     >
       {#each menus as menu}
-        <li class="px-5 rounded-md hover:bg-[#f9bc2d46]">
-          <a href={menu.path}>{menu.name}</a>
+        <li
+          class="px-5 rounded-md hover:bg-[#f9bc2d46] dark:hover:bg-darkHoverColor"
+        >
+          <a
+            class="dark:text-darkTPrimay dark:visited:text-darkTPrimay"
+            href={menu.path}>{menu.name}</a
+          >
         </li>
       {/each}
+      <button
+        class="w-10 h-10 dark:hover:bg-darkHoverColor rounded-lg hover:bg-[#f9bc2d46]"
+        on:click={handleChangeThemeMode}
+      >
+        {#if isDarkMode}
+          <img src="/assets/light.svg" alt="light mode" />
+        {:else}
+          <img src="/assets/dark.svg" alt="dark mode" />
+        {/if}
+      </button>
     </ul>
     <div>
       <div class="flex flex-row justify-between items-center md:hidden">
         <img
           src="/assets/logo.svg"
           alt="logo"
-          class="w-24 mx-6 transition-opacity ease-in-out delay-300 duration-1000"
+          class="w-24 mx-6 transition-opacity ease-in-out delay-300 duration-1000 dark:invert"
           class:opacity-0={hiddenMenu}
           class:opacity-100={!hiddenMenu}
         />
@@ -104,21 +153,26 @@
       </div>
     </div>
     <div
-      class="box-border px-4 py-12 md:px-12 md:py-24 bg-[white] relative rounded-[10px] mb-[50px] min-h-[calc(100vh_-_180px)]"
+      class="dark:bg-[#18181b] box-border px-4 py-12 md:px-12 md:py-24 bg-[white] relative rounded-[10px] mb-[50px] min-h-[calc(100vh_-_180px)]"
     >
       <a href="/" class="no-underline hover:no-underline">
         <img
           src="/assets/logo.svg"
           alt="logo"
-          class="block mx-auto w-60 md:w-80 mt-8 mb-12"
+          class="block mx-auto w-60 md:w-80 mt-8 mb-12 dark:invert"
         />
       </a>
       <slot />
     </div>
   </div>
-  <footer class="pb-6 text-center px-4">
+  <footer class="pb-6 text-center px-4 dark:text-darkTPrimay">
     © 2024 Query.rs, built by
-    <a href="https://github.com/folyd" target="_blank">Folyd</a>
-    with ❤️❤️, see <a href="/about">about</a> page to learn more.
+    <a
+      href="https://github.com/folyd"
+      target="_blank"
+      class="dark:text-darkTPrimay">Folyd</a
+    >
+    with ❤️❤️, see <a href="/about" class="dark:text-darkTPrimay">about</a> page
+    to learn more.
   </footer>
 </div>

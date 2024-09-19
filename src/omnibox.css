@@ -12,6 +12,30 @@
   border-radius: 14px;
   padding: 4px 10px;
   font-size: 15px;
+
+  & + .omn-dropdown {
+    @apply dark:bg-black dark:text-darkTextPrimary;
+    & .omn-dim {
+      @apply dark:text-[#8d8d8d];
+    }
+    & .omn-dropdown-item:hover {
+      @apply dark:bg-darkHoverColor;
+    }
+    & .omn-selected{
+      @apply dark:bg-[#333333bf];
+    }
+    & img {
+      @apply dark:invert;
+    }
+    & div:last-child {
+      & > div {
+        @apply dark:bg-darkBgPrimary;
+      }
+      & button {
+        @apply hover:dark:bg-[#c8541ac7];
+      }
+    }
+  }
 }
 @media (min-width: 768px) {
   .omn-container {

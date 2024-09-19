@@ -137,10 +137,16 @@
 
 <svelte:window on:keydown={handleKeydown} />
 <Toaster />
-<div class="text-center text-sm max-w-screen-md mx-auto px-4">
+<div
+  class="text-center text-sm max-w-screen-md mx-auto px-4 dark:text-darkTextPrimary"
+>
   You can add the crate you search most to local, this allows you to search that
-  crate's docs via <code class="text-[#f9bb2d]">@crate-name keyword</code>, for example:
-  <a href="https://query.rs/?q=@tokio%20spawn">@tokio spawn</a>
+  crate's docs via <code class="text-[#f9bb2d]">@crate-name keyword</code>, for
+  example:
+  <a
+    href="https://query.rs/?q=@tokio%20spawn"
+    class="dark:text-darkTextPrimary">@tokio spawn</a
+  >
 </div>
 <div
   class="m-8 mb-16 flex flex-col items-center md:flex-row md:justify-center md:items-center"
@@ -150,11 +156,11 @@
     bind:value={searchCrate}
     autofocus
     type="text"
-    class="w-full md:w-[400px] h-8 px-2 py-0 rounded border border-solid border-[#f9bb2daa] focus:outline-none"
+    class="w-full md:w-[400px] h-8 px-2 py-0 rounded border border-solid border-[#f9bb2daa] focus:outline-none dark:bg-darkBgPrimary dark:text-darkTextPrimary"
   />
-  <span class="btn btn-primary m-4" on:click={addCrate}> Add crate </span>
+  <span class="btn btn-primary m-4 dark:text-black" on:click={addCrate}> Add crate </span>
 </div>
-<div class="subtext flex justify-between my-4">
+<div class="subtext flex justify-between my-4 dark:text-darkTextPrimary">
   <span>
     You have indexed <span>{crates.length}</span>
     {crates.length > 0 ? "crates" : "crate"}, disk usage:
@@ -163,7 +169,7 @@
   </span>
   <span>
     Sort by:
-    <select bind:value={orderBy} class="border">
+    <select bind:value={orderBy} class="border dark:bg-darkBgPrimary">
       <option value="time">Indexed time</option>
       <option value="alphanumeric">Alphanumeric</option>
       <option value="searches">Searches</option>
